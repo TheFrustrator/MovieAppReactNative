@@ -5,6 +5,7 @@ import { images } from "@/constants/images";
 import { fetchPopularMovies } from "@/Services/api";
 import useFetch from "@/Services/useFetch";
 import { Link, useRouter } from "expo-router";
+import { useEffect } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -26,6 +27,10 @@ export default function Index() {
       query: "",
     })
   );
+
+ useEffect(()=>{
+
+ },)
 
   return (
     <View className="flex-1 bg-primary">
