@@ -1,28 +1,60 @@
-import {Client, Databases, Query} from 'react-native-appwrite'
+import { Client, Databases, ID, Query } from "react-native-appwrite";
 
-//track the searches 
+//track the searches
 const DATABASE_ID = process.env.EXPO_PUBLIC_APPWRITE_DATABASE_ID!;
 const COLLECTION_ID = process.env.EXPO_PUBLIC_APPWRITE_COLLECTION_ID!;
 
 const client = new Client()
-    .setEndpoint('https://cloude.appwrite.io/v1')
-    .setProject(process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!)
-
+  .setEndpoint("https://cloud.appwrite.io/v1")
+  .setProject(process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!);
 
 const database = new Databases(client);
 
-
-export const updateSearchCount = async(query: String, movie: Movie) => {
+export const updateSearchCount = async (query: string, movie: Movie) => {
+  try {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-        Query.equal('searchTerm', query)
-    ])
+      Query.equal("searchTerm", query),
+    ]);
 
-    console.log(result)
+    if (result.documents.length > 0) {
+      const existingMovies = result.documents[0];
+
+      await database.updateDocument(
+        DATABASE_ID,
+        COLLECTION_ID,
+        existingMovies.$id,
+        {
+          count: (existingMovies.count ?? 0) + 1,
+        }
+      );
+    } else {
+      await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
+        searchTerm: query,
+        movie_id: movie.id,
+        count: 1,
+        title: movie.title,
+        poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+
+  //check if a record of that search has ben stored
+  //if a document is found incremenrt the searchCount field
+  //if no document id found
+  // create a new document in appwrite database
+};
 
 
-    //check if a record of that search has ben stored
-    //if a document is found incremenrt the searchCount field 
-    //if no document id found
-       // create a new document in appwrite database
-}
-
+// export const getTrendingMovies = async(): Promise<TrendingMovie[] | undefined > =>{
+//     try {
+//         const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+//       Query.equal("searchTerm", query),
+//     ]);
+//     } catch (error) {
+//         console.log(error)
+//         return undefined
+//     }
+// }
