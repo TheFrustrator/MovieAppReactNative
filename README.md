@@ -140,10 +140,4 @@ Please follow the existing coding style and run lint/format before opening a PR.
 
 ---
 
-If you want I can do one (or more) of the following next:
-- Create and commit this README.md update to the repository.
-- Add a `.env.example` file to the repo with the sample variables shown above.
-- Scan the `app/` and `Services/` files and produce a README section that documents the actual routes and exported service functions (I can read files and infer exact route names and API functions).
-- Add screenshot placeholders (or capture existing UI screens if you prefer) and add them to `assets/screenshots/` and reference them from the README.
 
-Which of the above should I do next? (I can perform multiple steps in one go.)
